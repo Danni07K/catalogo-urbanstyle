@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UrbanStyle PE - Catálogo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <!-- Header -->
+  <header class="bg-white shadow-md p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+    <h1 class="text-xl font-bold text-gray-800">UrbanStyle PE</h1>
+    <div class="flex flex-wrap gap-2 items-center">
+      <button onclick="filtrar('Todos')" class="text-sm font-medium px-3 py-1 rounded hover:bg-gray-200">Todos</button>
+      <button onclick="filtrar('Zapatillas')" class="text-sm font-medium px-3 py-1 rounded hover:bg-gray-200">Zapatillas</button>
+      <button onclick="filtrar('Polos')" class="text-sm font-medium px-3 py-1 rounded hover:bg-gray-200">Polos</button>
+      <button onclick="filtrar('Joggers')" class="text-sm font-medium px-3 py-1 rounded hover:bg-gray-200">Joggers</button>
+      <button onclick="filtrar('Otros')" class="text-sm font-medium px-3 py-1 rounded hover:bg-gray-200">Otros</button>
+      <input type="text" id="busqueda" oninput="buscar()" placeholder="Buscar por nombre o precio" class="ml-4 p-2 border rounded w-60">
+    </div>
+  </header>
+
+  <!-- Catálogo -->
+  <main class="p-6">
+    <div id="productos-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <!-- Productos aparecerán aquí -->
+    </div>
+  </main>
+
+  <script>
+    const productos = [
+      {
+        nombre: "Zapatillas Urbanas",
+        precio: "120.00",
+        imagen: "imagenes/ZapatillasUrbanas.png",
+        categoria: "Zapatillas",
+        mensaje: "Hola, quiero comprar las Zapatillas Urbanas"
+      },
+      {
+        nombre: "Polo Oversize Negro",
+        precio: "45.00",
+        imagen: "imagenes/PoloNegro.png",
+        categoria: "Polos",
+        mensaje: "Hola, me interesa el Polo Oversize Negro"
+      },
+      {
+        nombre: "Jogger Gris",
+        precio: "70.00",
+        imagen: "imagenes/jogger-gris-oscuro-hombre.png",
+        categoria: "Joggers",
+        mensaje: "Hola, deseo el Jogger Gris"
+      },
+      {
+        nombre: "Zapatillas Running",
+        precio: "135.00",
+        imagen: "imagenes/ZapatillasRunning.png",
+        categoria: "Zapatillas",
+        mensaje: "Hola, quiero las Zapatillas Running"
+      },
+      {
+        nombre: "Polo Blanco Minimal",
+        precio: "40.00",
+        imagen: "imagenes/Polo-camisero-Blanco.png",
+        categoria: "Polos",
+        mensaje: "Hola, me interesa el Polo Blanco Minimal"
+      },
+      {
+        nombre: "Mochila Urbana",
+        precio: "65.00",
+        imagen: "imagenes/MochilaUrbana.png",
+        categoria: "Otros",
+        mensaje: "Hola, quiero la Mochila Urbana"
+      }
+    ];
+
+    let categoriaActual = "Todos";
+
+    function mostrarProductos(lista) {
+      const contenedor = document.getElementById("productos-container");
+      contenedor.innerHTML = "";
+
+      lista.forEach(producto => {
+        const div = document.createElement("div");
+        div.className = "bg-white p-4 rounded shadow-md flex flex-col items-center text-center transform transition-transform hover:scale-105 hover:shadow-lg";
+        div.innerHTML = `
+          <div class="w-full h-60 overflow-hidden mb-4">
+            <img src="${producto.imagen}" alt="${producto.nombre}" class="w-full h-full object-contain rounded" />
+          </div>
+          <h2 class="text-lg font-semibold mb-1">${producto.nombre}</h2>
+          <p class="text-gray-700 mb-2">S/ ${producto.precio}</p>
+          <a href="https://wa.me/51918855601?text=${encodeURIComponent(producto.mensaje)}"
+             target="_blank"
+             class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">
+            Comprar por WhatsApp
+          </a>
+        `;
+        contenedor.appendChild(div);
+      });
+    }
+
+    function filtrar(categoria) {
+      categoriaActual = categoria;
+      const filtrados = categoria === "Todos" ? productos : productos.filter(p => p.categoria === categoria);
+      mostrarProductos(filtrados);
+    }
+
+    function buscar() {
+      const texto = document.getElementById("busqueda").value.toLowerCase();
+      const filtrados = productos.filter(p => {
+        const coincideNombre = p.nombre.toLowerCase().includes(texto);
+        const coincidePrecio = p.precio.includes(texto);
+        const coincideCategoria = categoriaActual === "Todos" || p.categoria === categoriaActual;
+        return (coincideNombre || coincidePrecio) && coincideCategoria;
+      });
+      mostrarProductos(filtrados);
+    }
+
+    // Mostrar todos al inicio
+    mostrarProductos(productos);
+  </script>
+
+</body>
+</html>
